@@ -29,6 +29,7 @@ graph LR;
 A-->AB;
 B-->AB;
 AB-->ABAB;
+AB-->ABAB;
 ```
 ### `ABRACADABRA`
 
@@ -51,6 +52,7 @@ D-->ABRACAD;
 ABRACAD-->ABRACADABRA;
 ABRA-->ABRACADABRA;
 ```
+
 ## TODO
 
 - [x] Simple bfs/djikstras search for strings like above

@@ -96,8 +96,7 @@ def format_graph_md(solution: list[str]):
     for s in rest:
         diff = asm_diff(first, s)
         output += f"{first}-->{s};\n"
-        if diff != first:
-            output += f"{diff}-->{s};\n"
+        output += f"{diff}-->{s};\n"
         first = s
     output += "```"
     return output

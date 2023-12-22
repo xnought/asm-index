@@ -10,7 +10,11 @@ class Node:
 
 def str_unique(strs: list[str]) -> list[str]:
     """unique: return a list of unique strings"""
-    return list(set(strs))
+    unique = []
+    for s in strs:
+        if s not in unique:
+            unique.append(s)
+    return unique
 
 
 def str_atomize(s: str) -> list[str]:

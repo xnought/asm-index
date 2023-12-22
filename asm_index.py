@@ -20,9 +20,14 @@ def str_asm_combos(a: str, others: list[str]) -> list[str]:
     return list(set([a + o for o in others] + [o + a for o in others]))
 
 
-def possible_children(node: Node, pool: list[str]) -> list[Node]:
+def possible_children(node: Node, pool: list[str], solution: str) -> list[Node]:
     """possible_children: given a node, return all possible children"""
-    return [Node(data=p, parent=node) for p in str_asm_combos(node.data, pool)]
+    # adds all combos and if the combos are definitely wrong, (like a substring that never shows up, then we're soooo wrong and don't need to add)
+    return [
+        Node(data=p, parent=node)
+        for p in str_asm_combos(node.data, pool)
+        if p in solution and len(p) <= len(solution)
+    ]
 
 
 def str_asm_index(s: str) -> int:
@@ -47,8 +52,8 @@ def str_asm_index(s: str) -> int:
     # so we have to combinatorially try stuff
     pool = [] + atoms
     root = Node(data=atoms[0])
-    potentials = possible_children(root, pool)
-    print(potentials)
+    potentials = possible_children(root, pool, s)
+    print(potentials, "here")
 
     return float("inf")
 

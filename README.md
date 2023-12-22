@@ -6,13 +6,21 @@ For now only takes into accounts bytes and positioned in 1d (a character to the 
 
 For example, how a string is assmebled. Like AABBA
 
-Can be assembled with A->AA->AAB->AABB->AABBA
+Can be assembled with 
 
-Which is four steps to assumble the ending sting.
+```mermaid
+graph LR;
+A-->AA-->AAB-->AABB-->AABBA
+```
+
+Which is four steps to assemble the ending sting.
 
 For example with the classic example ABRACADABRA
 
-A->AB->ABR->ABRA->ABRAC->ABRACA->ABRACAD->ABRRACABRA
+```mermaid
+graph LR;
+A-->AB-->ABR-->ABRA-->ABRAC-->ABRACA-->ABRACAD-->ABRACADABRA
+```
 
  we can reuse the ABRA at a cost of 1 since we assume sufficiently complex objects can only exist with things making them (assumption of selection and life in general).
  

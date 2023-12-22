@@ -1,4 +1,7 @@
-def atomize(s: str) -> list[str]:
+def str_atomize(s: str) -> list[str]:
+    """atomize: break a string into its atoms, for us this means characters (bytes)
+    for more complicated objects, will need more complicated atomize functions
+    """
     return [c for c in s]
 
 
@@ -8,7 +11,7 @@ def str_asm_index(s: str) -> int:
     Returns:
         int: the asm index of the string
     """
-    atoms = atomize(s)
+    atoms = str_atomize(s)
 
     # can't assemble nothing or a single atom (one atom is already assembled)
     if len(atoms) <= 1:

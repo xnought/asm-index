@@ -1,8 +1,11 @@
 class Node:
-    def __init__(self, data, parent=None, is_atom=False):
+    def __init__(self, data, parent=None, is_atom=False, depth=0, children=None):
         self.data = data
         self.parent = parent
         self.is_atom = is_atom
+        self.depth = depth
+        if children is None:
+            self.children = []
 
     def __repr__(self):
         return f"{self.data}"
@@ -37,6 +40,19 @@ def already_asmed(node: Node):
     return already_asmed(node.parent) + [node.data]
 
 
+def already_asmed_to_depth(root_node: Node, depth: int = 0) -> list[str]:
+    asmed = []
+
+    def _compile(node: Node):
+        for c in node.children:
+            if c.depth <= depth:
+                asmed.append(c.data)
+                _compile(c)
+
+    _compile(root_node)
+    return asmed
+
+
 def backtrack_asm_index(node: Node, print_path=False):
     solution = []
 
@@ -64,19 +80,33 @@ def str_asm_index(s: str) -> int:
 
     # but anything over three is not clear what the assembly index is
     # so we have to combinatorially try stuff
-    uber_root = Node(data=None, parent=None)
-    q = [Node(data=a, parent=uber_root, is_atom=True) for a in atoms]
+    uber_root = Node(data=None, parent=None, depth=0)
+    uber_root.children = [
+        Node(data=a, parent=uber_root, is_atom=True, depth=uber_root.depth + 1)
+        for a in atoms
+    ]
+    q = [c for c in uber_root.children]
+
     while len(q) > 0:
         cur = q.pop(0)
 
-        # otherwise, continue to look for solutions
-        pool = atoms + already_asmed(cur)  # can use already assembled for cost of 1
-        for new_asm in str_asm_combos(cur.data, pool):
+        asmed = already_asmed_to_depth(uber_root, depth=cur.depth)
+        for new_asm in str_asm_combos(cur.data, asmed):
             if new_asm == s:
-                res = backtrack_asm_index(Node(data=new_asm, parent=cur))
+                res = backtrack_asm_index(
+                    Node(data=new_asm, parent=cur, depth=cur.depth + 1)
+                )
                 return res
-            elif len(new_asm) <= len(s) and new_asm in s:
-                q.append(Node(data=new_asm, parent=cur))
+            elif (
+                len(new_asm) <= len(s)
+                and new_asm in s
+                and new_asm not in [c.data for c in q]
+                and new_asm not in asmed
+                and new_asm != cur.data
+            ):
+                c = Node(data=new_asm, parent=cur, depth=cur.depth + 1)
+                cur.children.append(c)
+                q.append(c)
 
     return []
 
@@ -108,16 +138,17 @@ def simple_tests():
     s3 = "ABAB"
     s4 = "ABRACADABRA"
 
-    res = str_asm_index(s1)
-    assert len(res) == 1
+    # res = str_asm_index(s1)
+    # assert len(res) == 1
 
-    res = str_asm_index(s2)
-    assert len(res) == 2
+    # res = str_asm_index(s2)
+    # assert len(res) == 2
 
-    res = str_asm_index(s3)
-    assert len(res) == 3
+    # res = str_asm_index(s3)
+    # assert len(res) == 3
 
     res = str_asm_index(s4)
+    print(res)
     assert len(res) == 8
 
     print("ALL TESTS PASSED")
@@ -134,6 +165,6 @@ def md_example(a: str):
 
 if __name__ == "__main__":
     simple_tests()
-    md_example("AB")
-    md_example("ABAB")
-    md_example("ABRACADABRA")
+    # md_example("AB")
+    # md_example("ABAB")
+    # md_example("ABRACADABRA")

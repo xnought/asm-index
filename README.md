@@ -14,8 +14,8 @@ For example with the classic example ABRACADABRA
 
 A->AB->ABR->ABRA->ABRAC->ABRACA->ABRACAD->ABRRACABRA
 
-Sinve we can reuse the ABRA since we assume that selection is taking place and probably there is something generating it somehow.
-
+ we can reuse the ABRA at a cost of 1 since we assume sufficiently complex objects can only exist with things making them (assumption of selection and life in general).
+ 
 So we consider ABRACRADABRA to have an index of 7
 
 - [ ] Simple bfs/djikstras search for strings like above

@@ -81,6 +81,28 @@ def str_asm_index(s: str) -> int:
     return []
 
 
+def asm_diff(a: str, b: str):
+    if b.index(a) == 0:
+        return b[b.index(a) + len(a) :]
+    else:
+        return b[: b.index(a)]
+
+
+def format_graph_md(solution: list[str]):
+    output = ""
+    output += "```mermaid\n"
+    output += "graph LR;\n"
+    first, *rest = solution
+    for s in rest:
+        diff = asm_diff(first, s)
+        output += f"{first}-->{s};\n"
+        if diff != first:
+            output += f"{diff}-->{s};\n"
+        first = s
+    output += "```"
+    return output
+
+
 def simple_tests():
     s1 = "A"
     s2 = "AB"
@@ -102,5 +124,17 @@ def simple_tests():
     print("ALL TESTS PASSED")
 
 
+def md_example(a: str):
+    res = str_asm_index(a)
+    print(f"### `{a}`")
+    print()
+    print(f"Assembly index of `{len(res) - 1}`")
+    print()
+    print(format_graph_md(res))
+
+
 if __name__ == "__main__":
     simple_tests()
+    md_example("AB")
+    md_example("ABAB")
+    md_example("ABRACADABRA")

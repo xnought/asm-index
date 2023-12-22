@@ -6,6 +6,7 @@ class Node:
         self.depth = depth
         if children is None:
             self.children = []
+        self.merger = (None, None)  # tells which nodes merged to make this node
 
     def __repr__(self):
         return f"{self.data}"
@@ -32,6 +33,21 @@ def str_asm_combos(a: str, others: list[str]) -> list[str]:
     return str_unique([a + o for o in others] + [o + a for o in others])
 
 
+def node_asm_combos(parent: Node, asmed: list[Node]) -> list[Node]:
+    """str_asm_combos: possible left and right side concatenations of string assembly"""
+    res = []
+    for a in asmed:
+        rhs = parent.data + a.data
+        lhs = a.data + parent.data
+
+        res.append(Node(data=lhs, parent=parent, depth=parent.depth + 1))
+
+        if rhs != lhs:
+            res.append(Node(data=rhs, parent=parent, depth=parent.depth + 1))
+
+    return res
+
+
 def already_asmed(node: Node):
     # recur backwards up till we hit parent of None
     if node.is_atom:
@@ -40,13 +56,13 @@ def already_asmed(node: Node):
     return already_asmed(node.parent) + [node.data]
 
 
-def already_asmed_to_depth(root_node: Node, depth: int = 0) -> list[str]:
+def already_asmed_to_depth(root_node: Node, depth: int = 0) -> list[Node]:
     asmed = []
 
     def _compile(node: Node):
         for c in node.children:
             if c.depth <= depth:
-                asmed.append(c.data)
+                asmed.append(c)
                 _compile(c)
 
     _compile(root_node)
@@ -89,24 +105,20 @@ def str_asm_index(s: str) -> int:
 
     while len(q) > 0:
         cur = q.pop(0)
-
         asmed = already_asmed_to_depth(uber_root, depth=cur.depth)
-        for new_asm in str_asm_combos(cur.data, asmed):
-            if new_asm == s:
-                res = backtrack_asm_index(
-                    Node(data=new_asm, parent=cur, depth=cur.depth + 1)
-                )
-                return res
+        print(cur, asmed)
+        for new_asm in node_asm_combos(cur, asmed):
+            if new_asm.data == s:
+                return backtrack_asm_index(new_asm)
             elif (
-                len(new_asm) <= len(s)
-                and new_asm in s
-                and new_asm not in [c.data for c in q]
-                and new_asm not in asmed
-                and new_asm != cur.data
+                len(new_asm.data) <= len(s)
+                and new_asm.data in s
+                and new_asm.data not in [c.data for c in q]
+                and new_asm.data not in asmed
+                and new_asm.data != cur.data
             ):
-                c = Node(data=new_asm, parent=cur, depth=cur.depth + 1)
-                cur.children.append(c)
-                q.append(c)
+                cur.children.append(new_asm)
+                q.append(new_asm)
 
     return []
 

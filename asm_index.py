@@ -1,8 +1,7 @@
 class Node:
-    def __init__(self, data, parent=None, children=[], is_atom=False):
+    def __init__(self, data, parent=None, is_atom=False):
         self.data = data
         self.parent = parent
-        self.children = children
         self.is_atom = is_atom
 
     def __repr__(self):
@@ -62,8 +61,7 @@ def str_asm_index(s: str) -> int:
     # but anything over three is not clear what the assembly index is
     # so we have to combinatorially try stuff
     uber_root = Node(data=None, parent=None)
-    uber_root.children = [Node(data=a, parent=uber_root, is_atom=True) for a in atoms]
-    q = [c for c in uber_root.children]
+    q = [Node(data=a, parent=uber_root, is_atom=True) for a in atoms]
     while len(q) > 0:
         cur = q.pop(0)
 
@@ -79,20 +77,26 @@ def str_asm_index(s: str) -> int:
     return []
 
 
-if __name__ == "__main__":
+def simple_tests():
     s1 = "A"
     s2 = "AB"
     s3 = "ABAB"
     s4 = "ABRACADABRA"
 
-    print(str_asm_index(s1))
-    print("PASSED TEST 1")
+    res = str_asm_index(s1)
+    assert len(res) == 1
 
-    print(str_asm_index(s2))
-    print("PASSED TEST 2")
+    res = str_asm_index(s2)
+    assert len(res) == 2
 
-    print(str_asm_index(s3))
-    print("PASSED TEST 3")
+    res = str_asm_index(s3)
+    assert len(res) == 3
 
-    print(str_asm_index(s4))
-    print("PASSED TEST 4")
+    res = str_asm_index(s4)
+    assert len(res) == 8
+
+    print("ALL TESTS PASSED")
+
+
+if __name__ == "__main__":
+    simple_tests()

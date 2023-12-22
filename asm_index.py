@@ -1,9 +1,19 @@
+def atomize(s: str) -> list[str]:
+    return [c for c in s]
+
+
 def str_asm_index(s: str) -> int:
     """a_i: assembly index with smallest assembly path
 
     Returns:
         int: the asm index of the string
     """
+    atoms = atomize(s)
+
+    # can't assemble nothing or a single atom (one atom is already assembled)
+    if len(atoms) <= 1:
+        return 0
+
     return float("inf")
 
 

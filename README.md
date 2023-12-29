@@ -1,6 +1,6 @@
 # asm-index
 
-CURRENTLY NOT WORKING CORRECTLY!!!
+CURRENTLY NOT WORKING CORRECTLY!!! Almost works correcty, but I'm not sure how to handle the case when two atoms are merged separately, then merged again. Right now I jsut assume we have one atom and another merge at the start and only stuff can be added on it. THis is wrong.
 
 **Work in Progress** Assembly theory search to compute the shortest path to assemble an object. The key assumption is that each assembled object can be reused down the causal chain again with a cost of 1.
 
